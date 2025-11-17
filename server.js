@@ -48,7 +48,12 @@ const tasks = [
 app.get("/", (req,res)=>{
     res.send("server is running...");
 })
-
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    uptime: process.uptime()
+  });
+});
 app.locals.tasks = tasks;
 app.listen(port, ()=>{
     console.log("server is running on port : ", port);
