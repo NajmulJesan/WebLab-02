@@ -1,13 +1,13 @@
 const express = require('express');
-const taskRouter = require("./routes/tasks");
+const taskRouter = require("./src/routes/tasks");  // Updated path
 const port = 3000;
 const app = express();
 app.use(express.json());
-app.use('/tasks', taskRouter)
+app.use('/tasks', taskRouter);
+// Assignment 3: Mount task/:id route
+app.use('/task', taskRouter);
 
-const tasks = [
-  { id: 1, title: 'Sample Task', completed: false }
-];
+// Updated tasks array with 5 tasks including priority and createdAt
 const tasks = [
   { 
     id: 1, 
@@ -45,15 +45,19 @@ const tasks = [
     createdAt: new Date('2024-11-17')
   }
 ];
+
 app.get("/", (req,res)=>{
     res.send("server is running...");
 })
+
+// Assignment 2: Health check route
 app.get('/health', (req, res) => {
   res.json({
     status: 'healthy',
     uptime: process.uptime()
   });
 });
+
 app.locals.tasks = tasks;
 app.listen(port, ()=>{
     console.log("server is running on port : ", port);
