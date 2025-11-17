@@ -44,25 +44,41 @@ router.post('/', (req, res) => {
   }
 });
 
-// Assignment 3: GET /task/:id - Retrieve a single task by ID
+// Assignment 3 & 5: GET /task/:id - Retrieve a single task by ID with validation
 router.get('/:id', (req, res) => {
-  const taskId = req.params.id;
-  const tasks = req.app.locals.tasks;
-  
-  // Find task by ID
-  const task = tasks.find(t => t.id === parseInt(taskId));
+  try {
+    const taskId = req.params.id;
+    
+    // Assignment 5: Validate ID format
+    if (isNaN(taskId) || taskId.trim() === '') {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid ID format'
+      });
+    }
 
-  if (!task) {
-    return res.status(404).json({
+    const tasks = req.app.locals.tasks;
+    
+    // Find task by ID
+    const task = tasks.find(t => t.id === parseInt(taskId));
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        error: 'Task not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: task
+    });
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      error: 'Task not found'
+      error: 'Internal server error'
     });
   }
-
-  res.status(200).json({
-    success: true,
-    data: task
-  });
 });
 
 module.exports = router;
